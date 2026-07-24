@@ -1,0 +1,6 @@
+build/
+.clangd
+*.o
+*.swp
+*.swo
+*~
