@@ -1,8 +1,9 @@
 #include "Editor.hpp"
 
-Editor::Editor(int x, int y, int w, int h)
-  : Fl_Group(x, y, w, h) {
-
+Editor::Editor(int x, int y, int w, int h, Database* db)
+  : Fl_Group(x, y, w, h)
+  , db(db)
+{
   begin();
   // styling
   box(FL_FLAT_BOX);

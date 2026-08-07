@@ -4,9 +4,10 @@
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Tile.H>
 
-#include "Panel/Panel.hpp"
-#include "Editor/Editor.hpp"
-#include "TitleBar/TitleBar.hpp"
+#include "UI/Panel/Panel.hpp"
+#include "UI/Editor/Editor.hpp"
+#include "UI/TitleBar/TitleBar.hpp"
+#include "Plumbing/Database/Database.hpp"
 
 int main() {
   Fl::scheme("gleam");
@@ -14,6 +15,8 @@ int main() {
   const int WIN_X = 1280;
   const int WIN_Y = 720;
   Fl_Double_Window win(WIN_X, WIN_Y, "Workspace");
+
+  Database db;
 
   Fl_Tile tile(0, 0, WIN_X, WIN_Y);
   tile.begin();
@@ -28,7 +31,7 @@ int main() {
   right_panel->begin();
   right_panel->color(fl_rgb_color(55,55,55));
   TitleBar* titlebar = new TitleBar(300, 0, WIN_X-300, 30, "Arabic Workspace");
-  Editor* editor = new Editor(300, 30, WIN_X-300, WIN_Y-30);
+  Editor* editor = new Editor(300, 30, WIN_X-300, WIN_Y-30, &db);
 
   right_panel->end();
   tile.end();

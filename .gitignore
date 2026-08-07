@@ -1,6 +1,9 @@
 build/
 .clangd
+compile_commands.json
 *.o
 *.swp
 *.swo
 *~
+# sql lite db file:
+words.db
