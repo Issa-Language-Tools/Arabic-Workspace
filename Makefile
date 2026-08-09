@@ -6,10 +6,7 @@ BUILD_DIR = build
 SRCDIR = src
 
 SRC = $(SRCDIR)/StartApp.cpp \
-      $(SRCDIR)/UI/Editor/Editor.cpp \
-      $(SRCDIR)/UI/Panel/Panel.cpp \
-      $(SRCDIR)/UI/TitleBar/TitleBar.cpp \
-      $(SRCDIR)/Plumbing/Database/Database.cpp
+      $(shell find $(SRCDIR)/UI $(SRCDIR)/Plumbing -name '*.cpp')
 
 OBJ = $(SRC:%.cpp=$(BUILD_DIR)/%.o)
 
@@ -23,16 +20,13 @@ $(BUILD_DIR)/%.o: %.cpp | $(BUILD_DIR)
 
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)/$(SRCDIR)
-	mkdir -p $(BUILD_DIR)/$(SRCDIR)/UI/Editor
-	mkdir -p $(BUILD_DIR)/$(SRCDIR)/UI/Panel
-	mkdir -p $(BUILD_DIR)/$(SRCDIR)/UI/TitleBar
-	mkdir -p $(BUILD_DIR)/$(SRCDIR)/Plumbing/Database
+	mkdir -p $(sort $(dir $(OBJ)))
 
 
 run: all
 	./$(BUILD_DIR)/workspace
 
-compiledb:
+compiledb: clean
 	bear -- make
 
 clean:
