@@ -24,6 +24,23 @@ void Theme::style_editor(Fl_Text_Editor* e, Fl_Text_Buffer* buf) {
   e->tab_nav(1);
 }
 
+void Theme::style_input(Fl_Input* in) {
+  in->box(FL_FREE_BOXTYPE);
+  in->color(BG_INPUT);
+  in->textcolor(TEXT_PRIMARY);
+  in->textsize(TEXT_SIZE);
+  in->cursor_color(FL_WHITE);
+}
+
+void Theme::style_button(Fl_Button* b, const char* text) {
+  b->box(FL_FREE_BOXTYPE);
+  b->color(BG_HEADER);
+  b->labelcolor(FL_WHITE);
+  b->labelfont(FL_HELVETICA_BOLD);
+  b->labelsize(TEXT_SIZE);
+  b->label(text);
+}
+
 void Theme::style_header(Fl_Box* box, const char* text) {
   box->box(FL_FLAT_BOX);
   box->color(BG_HEADER);

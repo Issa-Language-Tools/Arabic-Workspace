@@ -1,7 +1,8 @@
 #include "NewEntry.hpp"
+
 #include <FL/Fl_Button.H>
 
-#include "UI/Theme/Theme.hpp"
+#include <iostream>
 
 #define COL_W 400
 
@@ -33,17 +34,29 @@ NewEntry::NewEntry(int x, int y, int w, int h, Database* db) : Fl_Group(x, y, w,
   English = new Fl_Text_Editor(0, 0, 0, 0);
   Theme::style_editor(English, english_buf);
 
-  Fl_Button* save_button = new Fl_Button(0, 0, 0, 0, "Save");
-  save_button->box(FL_FREE_BOXTYPE);
-  save_button->color(Theme::BG_HEADER);
-  save_button->labelcolor(FL_WHITE);
-  save_button->labelfont(FL_HELVETICA_BOLD);
+  Fl_Button* save_button = new Fl_Button(0, 0, 0, 0);
+  Theme::style_button(save_button, "Save");
+  save_button->callback([](Fl_Widget*, void* data) {
+    static_cast<NewEntry*>(data)->save();
+  }, this);
 
-  Fl_Button* edit_button = new Fl_Button(0, 0, 0, 0, "Edit");
-  edit_button->box(FL_FREE_BOXTYPE);
-  edit_button->color(Theme::BG_HEADER);
-  edit_button->labelcolor(FL_WHITE);
-  edit_button->labelfont(FL_HELVETICA_BOLD);
+  Fl_Button* edit_button = new Fl_Button(0, 0, 0, 0);
+  Theme::style_button(edit_button, "Edit");
+  edit_button->callback([](Fl_Widget*, void* data) {
+    NewEntry* self = static_cast<NewEntry*>(data);
+    EditPopup popup(self->newWord);
+    popup.set_modal();
+    popup.show();
+    while (popup.shown()) Fl::wait();
+    Word w = popup.word();
+    std::cout << "id=" << w.id
+              << " english=" << w.english
+              << " arabic=" << w.arabic
+              << " source=" << w.source
+              << " dialect=" << w.dialect
+              << " wordform=" << w.wordform << '\n';
+    self->save();
+  }, this);
 
   inputs->end();
   inputs->fixed(Arabic, COL_W);
@@ -62,4 +75,9 @@ void NewEntry::clear() {
   Arabic->take_focus();
 }
 
-void NewEntry::save() {}
+void NewEntry::save() {
+  newWord.english = english_buf->text();
+  newWord.arabic = arabic_buf->text();
+  std::cout << newWord.english << " : " << newWord.arabic << '\n';
+  clear();
+}
