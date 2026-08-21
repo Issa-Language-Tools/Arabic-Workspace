@@ -4,6 +4,7 @@
 #include <FL/Fl_Input.H>
 
 #include "NewEntry/NewEntry.hpp"
+#include "WordList/WordList.hpp"
 #include "Plumbing/Database/Database.hpp"
 
 class Editor : public Fl_Group {
@@ -14,4 +15,5 @@ public:
 private:
   Database* db;
   Fl_Flex* EntryRow;
+  WordList* wordList;
 };

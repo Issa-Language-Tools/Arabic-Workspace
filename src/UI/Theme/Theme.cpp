@@ -50,3 +50,10 @@ void Theme::style_header(Fl_Box* box, const char* text) {
   box->align(FL_ALIGN_LEFT | FL_ALIGN_INSIDE);
   box->label(text);
 }
+
+void Theme::style_scrollbar(Fl_Scrollbar* sb) {
+  sb->box(FL_NO_BOX);
+  sb->slider(FL_FLAT_BOX);
+  sb->color(BG_HEADER);
+  sb->selection_color(TEXT_PRIMARY);
+}

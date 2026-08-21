@@ -5,6 +5,7 @@
 #include <FL/Fl_Text_Buffer.H>
 #include <FL/Fl_Input.H>
 #include <FL/Fl_Button.H>
+#include <FL/Fl_Scrollbar.H>
 
 namespace Theme {
 
@@ -25,5 +26,6 @@ void style_editor(Fl_Text_Editor* e, Fl_Text_Buffer* buf);
 void style_input(Fl_Input* in);
 void style_button(Fl_Button* b, const char* text);
 void style_header(Fl_Box* box, const char* text);
+void style_scrollbar(Fl_Scrollbar* sb);
 
 }  // namespace Theme
