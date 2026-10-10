@@ -1,7 +1,8 @@
 CXX      = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra -Isrc -Istructs
+CXXFLAGS = -std=c++17 -Wall -Wextra -Isrc -Istructs $(shell pkg-config --cflags cairo)
 LDFLAGS  = -lfltk -lsqlite3
 BUILD_DIR = build
+RELEASE_DIR = build/release
 
 SRCDIR = src
 
@@ -10,21 +11,21 @@ SRC = $(SRCDIR)/StartApp.cpp \
 
 OBJ = $(SRC:%.cpp=$(BUILD_DIR)/%.o)
 
-all: $(BUILD_DIR)/workspace
+all: $(RELEASE_DIR)/workspace
 
-$(BUILD_DIR)/workspace: $(OBJ)
+$(RELEASE_DIR)/workspace: $(OBJ)
 	$(CXX) -o $@ $^ $(LDFLAGS)
 
-$(BUILD_DIR)/%.o: %.cpp | $(BUILD_DIR)
+$(BUILD_DIR)/%.o: %.cpp | $(RELEASE_DIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(BUILD_DIR):
-	mkdir -p $(BUILD_DIR)/$(SRCDIR)
+$(RELEASE_DIR):
+	mkdir -p $(RELEASE_DIR)
 	mkdir -p $(sort $(dir $(OBJ)))
 
 
 run: all
-	./$(BUILD_DIR)/workspace
+	./$(RELEASE_DIR)/workspace
 
 compiledb: clean
 	bear -- make

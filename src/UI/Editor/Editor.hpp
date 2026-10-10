@@ -1,4 +1,5 @@
 #pragma once
+#include <cairo.h>
 #include <FL/Fl_Flex.H>
 #include <FL/Fl_Group.H>
 #include <FL/Fl_Input.H>

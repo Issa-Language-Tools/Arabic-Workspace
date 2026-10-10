@@ -8,9 +8,10 @@ Editor::Editor(int x, int y, int w, int h, Database* db)
   color(fl_rgb_color(40, 40, 40), fl_rgb_color(220, 220, 0));
 
   int list_h = h/2 - 40;
-  Fl_Flex* WordsRow = new Fl_Flex(x+25, 40, w, list_h, Fl_Flex::HORIZONTAL);
+  Fl_Flex* WordsRow = new Fl_Flex(x+25, y+40, w, list_h, Fl_Flex::HORIZONTAL);
   wordList = new WordList(0, 0, w, list_h, db);
-
+  
+  //TODO: replace sample with actual data
   std::vector<Word> sample;
   Word w1; w1.id = 1; w1.english = "hello"; w1.arabic = "\xD9\x85\xD8\xB1\xD8\xAD\xD8\xA8\xD8\xA7"; w1.source = "book";
   Word w2; w2.id = 2; w2.english = "thank you"; w2.arabic = "\xD8\xB4\xD9\x83\xD8\xB1\xD8\xA7"; w2.source = "convo";
@@ -31,7 +32,7 @@ Editor::Editor(int x, int y, int w, int h, Database* db)
   wordList->populate(sample);
   WordsRow->end();
 
-  EntryRow = new Fl_Flex(x+50, h/2, w, 55, Fl_Flex::HORIZONTAL);
+  EntryRow = new Fl_Flex(x+50, y+ h/2, w, 55, Fl_Flex::HORIZONTAL);
   new NewEntry(0, 0, w, 55, db);
   EntryRow->end();
   end();

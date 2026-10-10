@@ -1,5 +1,4 @@
 #include "TitleBar.hpp"
-#include <FL/Fl_Box.H>
 
 TitleBar::TitleBar(int x, int y, int w, int h, const char* L) : Fl_Box(x, y, w, h, L) {
   box(FL_FLAT_BOX);
