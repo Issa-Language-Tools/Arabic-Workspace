@@ -1,36 +1,19 @@
-CXX      = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra -Isrc -Istructs $(shell pkg-config --cflags cairo)
-LDFLAGS  = -lfltk -lsqlite3
-BUILD_DIR = build
-RELEASE_DIR = build/release
+# Thin wrapper over CMake — keeps the `make run` workflow.
+BUILD_DIR := build
+BINARY    := $(BUILD_DIR)/release/workspace
+JOBS      := $(shell nproc 2>/dev/null || echo 4)
 
-SRCDIR = src
+.PHONY: all run clean configure
 
-SRC = $(SRCDIR)/StartApp.cpp \
-      $(shell find $(SRCDIR)/UI $(SRCDIR)/Plumbing -name '*.cpp')
-
-OBJ = $(SRC:%.cpp=$(BUILD_DIR)/%.o)
-
-all: $(RELEASE_DIR)/workspace
-
-$(RELEASE_DIR)/workspace: $(OBJ)
-	$(CXX) -o $@ $^ $(LDFLAGS)
-
-$(BUILD_DIR)/%.o: %.cpp | $(RELEASE_DIR)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-$(RELEASE_DIR):
-	mkdir -p $(RELEASE_DIR)
-	mkdir -p $(sort $(dir $(OBJ)))
-
+all:
+	cmake -S . -B $(BUILD_DIR) -DCMAKE_BUILD_TYPE=Release
+	cmake --build $(BUILD_DIR) -j$(JOBS)
 
 run: all
-	./$(RELEASE_DIR)/workspace
+	./$(BINARY)
 
-compiledb: clean
-	bear -- make
+configure:
+	cmake -S . -B $(BUILD_DIR) -DCMAKE_BUILD_TYPE=Release
 
 clean:
 	rm -rf $(BUILD_DIR)
-
-.PHONY: all clean compiledb

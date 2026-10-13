@@ -130,7 +130,7 @@ static std::string col_text(sqlite3_stmt* stmt, int col) {
     return t ? (const char*)t : "";
 }
 
-std::vector<Word> Database::getAllWords(int limit = 0) {
+std::vector<Word> Database::getAllWords(int limit) {
   std::vector<Word> result;
   if (!db) return result;
 

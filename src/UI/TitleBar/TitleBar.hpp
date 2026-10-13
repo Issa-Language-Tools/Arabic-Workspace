@@ -1,7 +1,8 @@
 #pragma once
-#include <FL/Fl_Box.H>
 
-class TitleBar : public Fl_Box {
+#include <qlabel.h>
+
+class TitleBar : public QLabel {
   public:
-    TitleBar(int x, int y, int w, int h, const char* L);
+  explicit TitleBar(const QString& text, QWidget* parent = nullptr);
 };

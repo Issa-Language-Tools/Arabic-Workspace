@@ -1,20 +1,15 @@
 #pragma once
-#include <cairo.h>
-#include <FL/Fl_Flex.H>
-#include <FL/Fl_Group.H>
-#include <FL/Fl_Input.H>
 
-#include "NewEntry/NewEntry.hpp"
-#include "WordList/WordList.hpp"
-#include "Plumbing/Database/Database.hpp"
+#include <QWidget>
 
-class Editor : public Fl_Group {
+class NewEntry;
+class WordList;
+
+class Editor : public QWidget {
 public:
-  Editor(int x, int y, int w, int h, Database* db);
-  ~Editor();
+  explicit Editor(QWidget* parent = nullptr);
 
 private:
-  Database* db;
-  Fl_Flex* EntryRow;
-  WordList* wordList;
+  NewEntry* m_newEntry;
+  WordList* m_wordList;
 };

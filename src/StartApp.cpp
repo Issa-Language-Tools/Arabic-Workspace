@@ -1,50 +1,43 @@
-#include <FL/Enumerations.H>
-#include <FL/Fl.H>
-#include <FL/Fl_Double_Window.H>
-#include <FL/Fl_Group.H>
-#include <FL/Fl_Tile.H>
+#include <qboxlayout.h>
 
-#include "Plumbing/Database/Database.hpp"
-#include "UI/Editor/Editor.hpp"
-#include "UI/MenuBar/MenuBar.hpp"
-#include "UI/Panel/Panel.hpp"
+#include <QApplication>
+#include <QFont>
+#include <QMainWindow>
+#include <QSplitter>
+#include <QWidget>
+
 #include "UI/TitleBar/TitleBar.hpp"
+#include "UI/Editor/Editor.hpp"
 
+int main(int argc, char* argv[]) {
+  QApplication app(argc, argv);
+  app.setFont(QFont("Noto Sans", 14));
 
+  QMainWindow window;
+  window.resize(1280, 720);
 
-int main() {
-  Fl::scheme("gleam");
-  Fl::set_font(FL_HELVETICA, "Noto Sans");
-  const int WIN_X = 1280;
-  const int WIN_Y = 720;
+  QSplitter* split = new QSplitter(Qt::Horizontal);
 
-  const int TITLE_H = 30;
-  const int MENU_H = 50;
-  Fl_Double_Window win(WIN_X, WIN_Y, "Workspace");
+  QWidget* leftPanel = new QWidget();
+  leftPanel->setStyleSheet("background-color: rgb(48, 48, 48);");
+  leftPanel->setMinimumWidth(200);
+  leftPanel->setMaximumWidth(500);
 
-  Database db;
+  QWidget* rightPanel = new QWidget();
+  rightPanel->setStyleSheet("background-color: rgb(55, 55, 55);");
+  QVBoxLayout* rightPanelLayout = new QVBoxLayout(rightPanel);
+  rightPanelLayout->addWidget(new TitleBar("Language Workspace"));
+  rightPanelLayout->addWidget(new Editor());
+  rightPanelLayout->addStretch();
 
-  Fl_Tile tile(0, 0, WIN_X, WIN_Y);
-  tile.begin();
+  split->addWidget(leftPanel);
+  split->addWidget(rightPanel);
+  split->setSizes({300, 900});
 
-  Panel* left_panel = new Panel(0, 0, 300, WIN_Y);
-  left_panel->begin();
-  left_panel->color(fl_rgb_color(48, 48, 48));
-  left_panel->end();
+  split->setStretchFactor(0, 1);
+  split->setStretchFactor(1, 3);
 
-  Panel* right_panel = new Panel(300, 0, WIN_X - 300, WIN_Y);
-  right_panel->begin();
-  right_panel->color(fl_rgb_color(55, 55, 55));
-  new TitleBar(300, 0, WIN_X - 300, TITLE_H, "Language Workspace");
-  new MenuBar(300, TITLE_H, WIN_X - 300, MENU_H, "Test");
-  new Editor(300, TITLE_H + MENU_H, WIN_X - 300, WIN_Y - TITLE_H - MENU_H, &db);
-
-  right_panel->end();
-  tile.end();
-  win.end();
-
-  win.resizable(tile);
-  win.show();
-
-  return Fl::run();
+  window.setCentralWidget(split);
+  window.show();
+  return app.exec();
 }

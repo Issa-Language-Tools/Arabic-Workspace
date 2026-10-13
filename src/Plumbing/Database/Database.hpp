@@ -16,7 +16,7 @@ class Database {
     ~Database();
 
     void addNewWord(const Word& word);
-    std::vector<Word> getAllWords(int limit);
+    std::vector<Word> getAllWords(int limit = 0);
 
   private:
     sqlite3* db;
