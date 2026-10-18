@@ -23,9 +23,10 @@ add_executable(workspace
     src/UI/Editor/NewEntry/NewEntry.cpp
     src/UI/Editor/WordList/WordList.cpp
     src/UI/Editor/EditPopup/EditPopup.cpp
+    src/UI/Settings/Settings.cpp
     src/UI/Theme/Theme.cpp
 )
 
 target_include_directories(workspace PRIVATE ${CMAKE_SOURCE_DIR}/structs)
 
-target_link_libraries(workspace PRIVATE Qt6::Widgets SQLite::SQLite3)
+target_link_libraries(workspace PRIVATE Qt6::Widgets SQLite3::SQLite3)

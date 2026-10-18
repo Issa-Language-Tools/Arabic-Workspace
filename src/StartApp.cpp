@@ -3,15 +3,24 @@
 #include <QApplication>
 #include <QFont>
 #include <QMainWindow>
+#include <QSettings>
 #include <QSplitter>
+#include <QTabWidget>
 #include <QWidget>
 
-#include "UI/TitleBar/TitleBar.hpp"
+#include "../structs/EntryDefaults.hpp"
 #include "UI/Editor/Editor.hpp"
+#include "UI/Settings/Settings.hpp"
+#include "UI/Theme/Theme.hpp"
+#include "UI/TitleBar/TitleBar.hpp"
+
+EntryDefaults loadDefaults();
 
 int main(int argc, char* argv[]) {
   QApplication app(argc, argv);
   app.setFont(QFont("Noto Sans", 14));
+
+  EntryDefaults entryDefault = loadDefaults();
 
   QMainWindow window;
   window.resize(1280, 720);
@@ -26,9 +35,20 @@ int main(int argc, char* argv[]) {
   QWidget* rightPanel = new QWidget();
   rightPanel->setStyleSheet("background-color: rgb(55, 55, 55);");
   QVBoxLayout* rightPanelLayout = new QVBoxLayout(rightPanel);
+
   rightPanelLayout->addWidget(new TitleBar("Language Workspace"));
-  rightPanelLayout->addWidget(new Editor());
-  rightPanelLayout->addStretch();
+  QTabWidget* tabs = new QTabWidget();
+  Editor* editor = new Editor(&entryDefault);
+  Settings* settings = new Settings(&entryDefault);
+  tabs->addTab(editor, "Editor");
+  tabs->addTab(settings, "Settings");
+  Theme::tabs(tabs);
+
+  QObject::connect(settings, &Settings::defaultsChanged, tabs, [tabs, editor]() {
+    tabs->setCurrentWidget(editor);
+  });
+
+  rightPanelLayout->addWidget(tabs, 1);
 
   split->addWidget(leftPanel);
   split->addWidget(rightPanel);
@@ -40,4 +60,15 @@ int main(int argc, char* argv[]) {
   window.setCentralWidget(split);
   window.show();
   return app.exec();
+}
+
+EntryDefaults loadDefaults() {
+  QSettings settings("config.ini", QSettings::IniFormat);
+
+  EntryDefaults defaults;
+  defaults.source = settings.value("defaults/source", "").toString();
+  defaults.dialect = settings.value("defaults/dialect", "").toString();
+  defaults.wordforms = settings.value("defaults/wordforms", "").toStringList();
+
+  return defaults;
 }

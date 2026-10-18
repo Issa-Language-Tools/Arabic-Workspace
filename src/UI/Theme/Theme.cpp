@@ -1,8 +1,10 @@
 #include "Theme.hpp"
 
+#include <QComboBox>
 #include <QLabel>
 #include <QPlainTextEdit>
 #include <QPushButton>
+#include <QTabWidget>
 #include <QTableWidget>
 
 namespace Theme {
@@ -34,6 +36,15 @@ void button(QPushButton* b) {
   b->setMaximumWidth(80);
 }
 
+void combo(QComboBox* c) {
+  c->setStyleSheet(
+    "background-color: rgb(50, 50, 50);"
+    "color: rgb(245, 245, 245);"
+    "font-size: 20px;"
+    "border: 1px solid rgb(200, 200, 200);");
+  c->setFixedHeight(55);
+}
+
 void table(QTableWidget* t) {
   t->setStyleSheet(
     "QTableWidget {"
@@ -58,4 +69,25 @@ void table(QTableWidget* t) {
     "}");
 }
 
+void tabs(QTabWidget* t) {
+  t->setStyleSheet(
+    "QTabWidget::pane {"
+    "  border: none;"
+    "  background-color: rgb(40, 40, 40);"
+    "}"
+    "QTabBar::tab {"
+    "  background-color: rgb(55, 55, 55);"
+    "  color: rgb(245, 245, 245);"
+    "  padding: 6px 12px;"
+    "  border: none;"
+    "  border-radius: 6px;"
+    "}"
+    "QTabBar::tab:selected {"
+    "  background-color: rgb(40, 40, 40);"
+    "}"
+    "QTabBar::tab:hover:!selected {"
+    "  background-color: rgb(70, 70, 70);"
+    "}");
 }
+
+}  // namespace Theme

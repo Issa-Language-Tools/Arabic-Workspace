@@ -2,21 +2,19 @@
 
 #include <QDialog>
 
+class QComboBox;
 class QPlainTextEdit;
-class QString;
-class QVBoxLayout;
-struct Word;
+class Word;
 
 class EditPopup : public QDialog {
 public:
-  explicit EditPopup(Word* word, QWidget* parent = nullptr);
+  explicit EditPopup(Word* word, const QStringList& wordforms, QWidget* parent = nullptr);
 
 private:
-  QPlainTextEdit* addRow(const QString& label, const QString& value, QVBoxLayout* stack);
-  QPlainTextEdit* _inEnglish;
-  QPlainTextEdit* _inArabic;
-  QPlainTextEdit* _inSource;
-  QPlainTextEdit* _inDialect;
-  QPlainTextEdit* _inWordform;
+  QPlainTextEdit* m_inEnglish;
+  QPlainTextEdit* m_inArabic;
+  QPlainTextEdit* m_inSource;
+  QPlainTextEdit* m_inDialect;
+  QComboBox* m_inWordForm;
   Word* w;
 };
