@@ -1,14 +1,17 @@
 #pragma once
-#include <FL/Fl_Flex.H>
-#include <FL/Fl_Group.H>
-#include <FL/Fl_Input.H>
-#include "Plumbing/Database/Database.hpp"
 
-class Editor : public Fl_Group {
+#include <QWidget>
+
+class NewEntry;
+class WordList;
+class EntryDefaults;
+
+class Editor : public QWidget {
 public:
-  Editor(int x, int y, int w, int h, Database* db);
-  ~Editor();
+  explicit Editor(const EntryDefaults* ed, QWidget* parent = nullptr);
+
 private:
-  Database* db;
-  Fl_Flex* row;
+  NewEntry* m_newEntry;
+  WordList* m_wordList;
+  const EntryDefaults* m_defaults;
 };

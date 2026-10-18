@@ -1,41 +1,26 @@
-CXX      = g++
-CXXFLAGS = -std=c++17 -Wall -Wextra -Isrc -Istructs
-LDFLAGS  = -lfltk -lsqlite3
-BUILD_DIR = build
+# Thin wrapper over CMake — keeps the `make run` workflow.
+BUILD_DIR := build
+BINARY    := $(BUILD_DIR)/release/workspace
+JOBS      := $(shell nproc 2>/dev/null || echo 4)
 
-SRCDIR = src
+# Suppress noisy Wayland text-input debug messages by default.
+QT_LOGGING_RULES ?= qt.qpa.wayland.textinput=false
 
-SRC = $(SRCDIR)/StartApp.cpp \
-      $(SRCDIR)/UI/Editor/Editor.cpp \
-      $(SRCDIR)/UI/Panel/Panel.cpp \
-      $(SRCDIR)/UI/TitleBar/TitleBar.cpp \
-      $(SRCDIR)/Plumbing/Database/Database.cpp
+.PHONY: all run run-debug clean configure
 
-OBJ = $(SRC:%.cpp=$(BUILD_DIR)/%.o)
-
-all: $(BUILD_DIR)/workspace
-
-$(BUILD_DIR)/workspace: $(OBJ)
-	$(CXX) -o $@ $^ $(LDFLAGS)
-
-$(BUILD_DIR)/%.o: %.cpp | $(BUILD_DIR)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-$(BUILD_DIR):
-	mkdir -p $(BUILD_DIR)/$(SRCDIR)
-	mkdir -p $(BUILD_DIR)/$(SRCDIR)/UI/Editor
-	mkdir -p $(BUILD_DIR)/$(SRCDIR)/UI/Panel
-	mkdir -p $(BUILD_DIR)/$(SRCDIR)/UI/TitleBar
-	mkdir -p $(BUILD_DIR)/$(SRCDIR)/Plumbing/Database
-
+all:
+	cmake -S . -B $(BUILD_DIR) -DCMAKE_BUILD_TYPE=Release
+	cmake --build $(BUILD_DIR) -j$(JOBS)
 
 run: all
-	./$(BUILD_DIR)/workspace
+	QT_LOGGING_RULES="$(QT_LOGGING_RULES)" ./$(BINARY)
 
-compiledb:
-	bear -- make
+# Same as `run`, but leaves all Qt logging untouched.
+run-debug: all
+	./$(BINARY)
+
+configure:
+	cmake -S . -B $(BUILD_DIR) -DCMAKE_BUILD_TYPE=Release
 
 clean:
 	rm -rf $(BUILD_DIR)
-
-.PHONY: all clean compiledb

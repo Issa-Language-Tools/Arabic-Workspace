@@ -1,9 +1,12 @@
 #include "TitleBar.hpp"
-#include <FL/Fl_Box.H>
 
-TitleBar::TitleBar(int x, int y, int w, int h, const char* L) : Fl_Box(x, y, w, h, L) {
-  box(FL_FLAT_BOX);
-  color(fl_rgb_color(55, 55, 55), fl_rgb_color(200, 200, 200));
-  labelsize(12);
-  labelcolor(fl_rgb_color(160, 160, 160));
+TitleBar::TitleBar(const QString& text, QWidget* parent)
+  : QLabel(text, parent) {
+  setStyleSheet(
+    "background-color: rgb(55, 55, 55);"
+    "color: rgb(160, 160, 160);"
+    "font-size: 12px;"
+    "padding-left: 8px;");
+  setFixedHeight(30);
+  setAlignment(Qt::AlignCenter);
 }
