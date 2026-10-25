@@ -13,6 +13,6 @@ else
   exit 1
 fi
 
-#/usr/bin/touch $MIGRATION_DIR$DATETIME$DELIM$FILENAME.sql
+/usr/bin/touch $MIGRATION_DIR$DATETIME$DELIM$FILENAME.sql
 echo "created: $MIGRATION_DIR$DATETIME$DELIM$FILENAME.sql"
 # OUTPUT looks like: YYYYMMDDTHHMMSS_<FILENAME>.sql

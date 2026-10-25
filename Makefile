@@ -1,7 +1,8 @@
 # Thin wrapper over CMake — keeps the `make run` workflow.
-BUILD_DIR := build
-BINARY    := $(BUILD_DIR)/release/workspace
-JOBS      := $(shell nproc 2>/dev/null || echo 4)
+BUILD_DIR   := build
+SCRIPTS_DIR := scripts
+BINARY      := $(BUILD_DIR)/release/workspace
+JOBS        := $(shell nproc 2>/dev/null || echo 4)
 
 # Suppress noisy Wayland text-input debug messages by default.
 QT_LOGGING_RULES ?= qt.qpa.wayland.textinput=false
@@ -21,6 +22,12 @@ run-debug: all
 
 configure:
 	cmake -S . -B $(BUILD_DIR) -DCMAKE_BUILD_TYPE=Release
+
+migrate:
+	${SCRIPTS_DIR}/migrate $(filter-out $@, $(MAKECMDGOALS))
+
+%:
+		@true
 
 clean:
 	rm -rf $(BUILD_DIR)
