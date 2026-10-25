@@ -9,6 +9,7 @@
 #include <QWidget>
 
 #include "../structs/EntryDefaults.hpp"
+#include "./Plumbing/Database/Database.hpp"
 #include "UI/Editor/Editor.hpp"
 #include "UI/Settings/Settings.hpp"
 #include "UI/Theme/Theme.hpp"
@@ -19,6 +20,9 @@ EntryDefaults loadDefaults();
 int main(int argc, char* argv[]) {
   QApplication app(argc, argv);
   app.setFont(QFont("Noto Sans", 14));
+
+  // Run Migrations:
+  Database db;
 
   EntryDefaults entryDefault = loadDefaults();
 
@@ -59,6 +63,7 @@ int main(int argc, char* argv[]) {
 
   window.setCentralWidget(split);
   window.show();
+
   return app.exec();
 }
 

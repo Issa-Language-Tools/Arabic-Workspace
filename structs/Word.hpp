@@ -8,5 +8,6 @@ struct Word {
   std::string source;
   std::string dialect;
   std::string wordform;
+  std::string category;
   bool exported = false;
 };

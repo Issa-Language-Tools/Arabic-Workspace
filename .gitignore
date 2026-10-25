@@ -7,6 +7,7 @@ compile_commands.json
 *~
 # sql lite db file:
 words.db
+versions.db
 
 # config.ini file:
 config.ini

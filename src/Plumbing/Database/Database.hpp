@@ -1,23 +1,20 @@
 #pragma once
 
-
-#include "Status.hpp"
-#include "Word.hpp"
-
-#include <cstdio>
 #include <sqlite3.h>
-#include <sstream>
+
 #include <vector>
 
+#include "Word.hpp"
 
-class Database { 
-  public:
-    Database(); // if no existing db exists, create a new db
-    ~Database();
+class Database {
+public:
+  Database();  // if no existing db exists, create a new db
+  ~Database();
 
-    void addNewWord(const Word& word);
-    std::vector<Word> getAllWords(int limit = 0);
+  void addNewWord(const Word& word);
+  std::vector<Word> getAllWords(int limit = 0);
 
-  private:
-    sqlite3* db;
+private:
+  sqlite3* db = nullptr;
+  sqlite3* versions = nullptr;
 };
