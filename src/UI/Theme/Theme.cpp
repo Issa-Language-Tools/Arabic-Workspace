@@ -2,6 +2,7 @@
 
 #include <QComboBox>
 #include <QLabel>
+#include <QListWidget>
 #include <QPlainTextEdit>
 #include <QPushButton>
 #include <QTabWidget>
@@ -43,6 +44,38 @@ void combo(QComboBox* c) {
     "font-size: 20px;"
     "border: 1px solid rgb(200, 200, 200);");
   c->setFixedHeight(55);
+}
+
+void comboButton(QPushButton* b) {
+  b->setStyleSheet(
+    "QPushButton {"
+    "  background-color: rgb(50, 50, 50);"
+    "  color: rgb(245, 245, 245);"
+    "  font-size: 20px;"
+    "  border: 1px solid rgb(200, 200, 200);"
+    "  text-align: left;"
+    "  padding-left: 8px;"
+    "}"
+    "QPushButton:hover {"
+    "  background-color: rgb(60, 60, 60);"
+    "}");
+  b->setFixedHeight(55);
+}
+
+void checkList(QListWidget* l) {
+  l->setStyleSheet(
+    "QListWidget {"
+    "  background-color: rgb(50, 50, 50);"
+    "  color: rgb(245, 245, 245);"
+    "  font-size: 20px;"
+    "  border: 1px solid rgb(200, 200, 200);"
+    "}"
+    "QListWidget::item {"
+    "  padding: 4px;"
+    "}"
+    "QListWidget::item:hover {"
+    "  background-color: rgb(70, 70, 70);"
+    "}");
 }
 
 void table(QTableWidget* t) {

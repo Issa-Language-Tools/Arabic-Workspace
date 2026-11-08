@@ -8,6 +8,7 @@
 #include <QString>
 #include <QStringList>
 
+#include "Editor/EditPopup/MultiSelectComboBox/MultiSelectComboBox.hpp"
 #include "Theme/Theme.hpp"
 
 inline QPlainTextEdit* addLabeledRow(QVBoxLayout* stack, const QString& label, const QString& value) {
@@ -35,6 +36,21 @@ inline QComboBox* addLabeledComboBox(QVBoxLayout* stack, const QString& label, c
   QComboBox* input = new QComboBox();
   Theme::combo(input);
   input->addItems(items);
+  row->addWidget(input);
+
+  stack->addLayout(row);
+  return input;
+}
+
+inline MultiSelectComboBox* addLabeledMultiSelect(QVBoxLayout* stack, const QString& label, const QStringList& items) {
+  QHBoxLayout* row = new QHBoxLayout();
+
+  QLabel* labelWidget = new QLabel(label);
+  Theme::label(labelWidget);
+  row->addWidget(labelWidget);
+
+  MultiSelectComboBox* input = new MultiSelectComboBox();
+  input->setItems(items);
   row->addWidget(input);
 
   stack->addLayout(row);

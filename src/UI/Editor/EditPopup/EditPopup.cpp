@@ -19,8 +19,16 @@ EditPopup::EditPopup(Word* word, const QStringList& wordforms, QWidget* parent) 
   m_inArabic = addLabeledRow(stack, "Arabic", QString::fromStdString(w->arabic));
   m_inSource = addLabeledRow(stack, "Source", QString::fromStdString(w->source));
   m_inDialect = addLabeledRow(stack, "Dialect", QString::fromStdString(w->dialect));
-  m_inWordForm = addLabeledComboBox(stack, "Wordform", wordforms);
-  m_inWordForm->setCurrentIndex(m_inWordForm->findText(QString::fromStdString(w->wordform)));
+  m_inWordForm = addLabeledMultiSelect(stack, "Wordform", wordforms);
+  QStringList selected;
+  const QStringList existing = QString::fromStdString(w->wordform).split(',', Qt::SkipEmptyParts);
+  for (QString part : existing) {
+    part = part.trimmed();
+    if (!part.isEmpty()) {
+      selected << part;
+    }
+  }
+  m_inWordForm->setCheckedItems(selected);
 
   QPushButton* saveButton = new QPushButton("Save");
   Theme::button(saveButton);
@@ -33,7 +41,7 @@ EditPopup::EditPopup(Word* word, const QStringList& wordforms, QWidget* parent) 
     w->arabic = m_inArabic->toPlainText().toStdString();
     w->source = m_inSource->toPlainText().toStdString();
     w->dialect = m_inDialect->toPlainText().toStdString();
-    w->wordform = m_inWordForm->currentText().toStdString();
+    w->wordform = m_inWordForm->checkedItems().join(", ").toStdString();
     accept();
   });
   connect(cancelButton, &QPushButton::clicked, this, &QDialog::reject);
