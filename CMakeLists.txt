@@ -24,6 +24,7 @@ add_executable(workspace
     src/UI/Editor/NewEntry/NewEntry.cpp
     src/UI/Editor/WordList/WordList.cpp
     src/UI/Editor/EditPopup/EditPopup.cpp
+    src/UI/Editor/EditPopup/MultiSelectComboBox/MultiSelectComboBox.cpp
     src/UI/Settings/Settings.cpp
     src/UI/Theme/Theme.cpp
 )
