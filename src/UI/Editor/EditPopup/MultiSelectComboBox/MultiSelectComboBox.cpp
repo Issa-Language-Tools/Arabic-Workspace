@@ -2,6 +2,7 @@
 
 #include <QApplication>
 #include <QEvent>
+#include <QKeyEvent>
 #include <QListWidget>
 #include <QListWidgetItem>
 #include <QMouseEvent>
@@ -57,20 +58,19 @@ MultiSelectComboBox::~MultiSelectComboBox() {
 }
 
 bool MultiSelectComboBox::eventFilter(QObject* watched, QEvent* event) {
-  // Close the dropdown when the user clicks anywhere that isn't the button
-  // or the list itself. Closing happens without consuming the event, so the
-  // click still reaches whatever was clicked (e.g. the Save button).
+  if (event->type() == QEvent::KeyPress) {
+    QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
+    if (m_list->isVisible() && keyEvent->key() == Qt::Key_Escape) {
+      m_list->hide();
+      // Consume the event so the parent dialog doesn't also close on Escape.
+      return true;
+    }
+  }
+
   if (event->type() == QEvent::MouseButtonPress) {
     QWidget* widget = qobject_cast<QWidget*>(watched);
     if (widget && m_list->isVisible() && widget != m_button &&
         !m_list->isAncestorOf(widget) && !m_button->isAncestorOf(widget)) {
-      m_list->hide();
-    }
-  } else if (event->type() == QEvent::ApplicationDeactivate) {
-    // Switching to another application also closes it. (We use this instead of
-    // WindowDeactivate because showing the popup itself deactivates the dialog,
-    // which would otherwise close the popup immediately.)
-    if (m_list->isVisible()) {
       m_list->hide();
     }
   }
