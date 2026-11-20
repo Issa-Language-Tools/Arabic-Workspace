@@ -31,6 +31,7 @@ enum Field {
   kDialect,
   kWordform,
   kCategory,
+  kTags,
   kFieldCount
 };
 
@@ -38,13 +39,13 @@ enum Field {
 // the field is not imported.
 constexpr int kNotImported = -1;
 
-const QStringList kFields = {"English", "Arabic", "Source", "Dialect", "Wordform", "Category"};
+const QStringList kFields = {"English", "Arabic", "Source", "Dialect", "Wordform", "Category", "Tags"};
 
 // Parallel to m_fieldMaps: which Word member each field index writes to.
 using WordMember = std::string Word::*;
 constexpr std::array<WordMember, kFieldCount> kWordMembers = {
   &Word::english, &Word::arabic, &Word::source,
-  &Word::dialect, &Word::wordform, &Word::category};
+  &Word::dialect, &Word::wordform, &Word::category, &Word::tags};
 
 void clearLayout(QLayout* layout) {
   while (QLayoutItem* item = layout->takeAt(0)) {
