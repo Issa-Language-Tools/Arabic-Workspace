@@ -18,3 +18,9 @@ Editor::Editor(const EntryDefaults* ed, QWidget* parent) : QWidget(parent), m_de
   stack->addStretch();
   stack->addWidget(m_newEntry);
 }
+
+void Editor::addImportedWords(const std::vector<Word>& words) {
+  for (const Word& w : words) {
+    m_wordList->addWord(w);
+  }
+}

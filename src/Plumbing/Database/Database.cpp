@@ -31,8 +31,8 @@ Database::~Database() {
 void Database::addNewWord(const Word& word) {
   if (!db) return;
   const char* sql =
-    "INSERT INTO words (english, arabic, source, dialect, wordform, category, exported) "
-    "VALUES (?, ?, ?, ?, ?, ?, ?);";
+    "INSERT INTO words (english, arabic, source, dialect, wordform, category, tags, exported) "
+    "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 
   // turn sql statement into bytecode program
   sqlite3_stmt* stmt = nullptr;
@@ -48,7 +48,8 @@ void Database::addNewWord(const Word& word) {
   sqlite3_bind_text(stmt, 4, word.dialect.c_str(), -1, SQLITE_TRANSIENT);
   sqlite3_bind_text(stmt, 5, word.wordform.c_str(), -1, SQLITE_TRANSIENT);
   sqlite3_bind_text(stmt, 6, word.category.c_str(), -1, SQLITE_TRANSIENT);
-  sqlite3_bind_int(stmt, 7, word.exported ? 1 : 0);
+  sqlite3_bind_text(stmt, 7, word.tags.c_str(), -1, SQLITE_TRANSIENT);
+  sqlite3_bind_int(stmt, 8, word.exported ? 1 : 0);
 
   // run the insert
   if (sqlite3_step(stmt) != SQLITE_DONE) {
@@ -65,7 +66,7 @@ std::vector<Word> Database::getAllWords(int limit) {
   std::stringstream final_sql;
 
   const char* sql =
-    "SELECT id, english, arabic, source, dialect, wordform, category, exported "
+    "SELECT id, english, arabic, source, dialect, wordform, category, tags, exported "
     "FROM words ORDER BY id DESC";
 
   if (limit > 0) {
@@ -89,7 +90,8 @@ std::vector<Word> Database::getAllWords(int limit) {
     w.dialect = col_text(stmt, 4);
     w.wordform = col_text(stmt, 5);
     w.category = col_text(stmt, 6);
-    w.exported = sqlite3_column_int(stmt, 7) != 0;
+    w.tags = col_text(stmt, 7);
+    w.exported = sqlite3_column_int(stmt, 8) != 0;
     result.push_back(w);
   }
 

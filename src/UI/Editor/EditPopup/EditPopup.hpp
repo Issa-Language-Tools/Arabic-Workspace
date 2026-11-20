@@ -17,5 +17,6 @@ private:
   QPlainTextEdit* m_inSource;
   QPlainTextEdit* m_inDialect;
   MultiSelectComboBox* m_inWordForm;
+  QPlainTextEdit* m_inTags;
   Word* w;
 };

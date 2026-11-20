@@ -71,16 +71,21 @@ void WordList::makeSampleData() {
 }
 
 void WordList::refreshRow(int r) {
-  Word* w = &m_words[r];
+  const Word& w = m_words[r];
 
-  m_table->setItem(r, 0, new QTableWidgetItem(QString::fromStdString(w->arabic)));
-  m_table->setItem(r, 1, new QTableWidgetItem(QString::fromStdString(w->english)));
-  m_table->setItem(r, 2, new QTableWidgetItem(QString::fromStdString(w->source)));
+  m_table->setItem(r, 0, new QTableWidgetItem(QString::fromStdString(w.arabic)));
+  m_table->setItem(r, 1, new QTableWidgetItem(QString::fromStdString(w.english)));
+  m_table->setItem(r, 2, new QTableWidgetItem(QString::fromStdString(w.source)));
 
   QPushButton* editButton = new QPushButton("Edit");
   Theme::button(editButton);
 
-  connect(editButton, &QPushButton::clicked, this, [this, w, r]() {
+  // Capture only the row index, then look up the Word when the button is
+  // clicked. Capturing a pointer into m_words would dangle once the vector
+  // reallocates (e.g. after an import adds more words).
+  connect(editButton, &QPushButton::clicked, this, [this, r]() {
+    Word* w = &m_words[r];
+
     EditPopup popup(w, m_defaults->wordforms);
 
     if (popup.exec() == QDialog::Accepted) {
@@ -97,7 +102,6 @@ void WordList::refreshRow(int r) {
 }
 
 void WordList::populate() {
-  makeSampleData();
   m_table->setRowCount((int)m_words.size());
 
   for (int r = 0; r < (int)m_words.size(); ++r) {
