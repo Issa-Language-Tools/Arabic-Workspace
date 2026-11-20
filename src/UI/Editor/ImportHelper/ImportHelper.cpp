@@ -9,6 +9,7 @@
 #include <qlabel.h>
 #include <qlineedit.h>
 #include <qpushbutton.h>
+#include <qregularexpression.h>
 #include <qsettings.h>
 #include <qtablewidget.h>
 
@@ -41,6 +42,12 @@ constexpr int kNotImported = -1;
 
 const QStringList kFields = {"English", "Arabic", "Source", "Dialect", "Wordform", "Category", "Tags"};
 
+// Tags that should be treated as a dialect value (e.g. MSA) rather than kept
+// in the tags field.
+const QStringList kDialectTags = {"MSA", "Palestinian", "Egyptian", "Levantine",
+                                  "Gulf", "Iraqi", "Moroccan", "Algerian",
+                                  "Tunisian", "Libyan", "Sudanese", "Yemeni"};
+
 // Parallel to m_fieldMaps: which Word member each field index writes to.
 using WordMember = std::string Word::*;
 constexpr std::array<WordMember, kFieldCount> kWordMembers = {
@@ -70,7 +77,7 @@ std::string stripBom(std::string line) {
 }  // namespace
 
 ImportHelper::ImportHelper(const EntryDefaults* defaults, QWidget* parent)
-    : QDialog(parent), m_defaults(defaults) {
+  : QDialog(parent), m_defaults(defaults) {
   setWindowTitle("Import");
   setStyleSheet("background-color: rgb(40, 40, 40);");
   resize(900, 720);
@@ -344,15 +351,26 @@ void ImportHelper::doImport() {
 
     Word w;
     for (int f = 0; f < kFieldCount; ++f) {
+      if (f == kTags) continue;  // tags are routed below
+
       const int col = m_fieldMaps[f]->currentData().toInt();
       if (col < 0 || col >= fields.size()) continue;
 
       w.*kWordMembers[f] = fields[col].trimmed().toStdString();
     }
 
+    // Scan the tags column and split matches out into dialect/wordform.
+    const int tagsCol = m_fieldMaps[kTags]->currentData().toInt();
+    if (tagsCol >= 0 && tagsCol < fields.size()) {
+      routeTags(fields[tagsCol], w);
+    }
+
     if (applyDefaults) {
       w.source = defaultSource;
-      w.dialect = defaultDialect;
+      // Don't clobber a dialect that tag routing already set (e.g. MSA).
+      if (w.dialect.empty()) {
+        w.dialect = defaultDialect;
+      }
     }
 
     words.push_back(w);
@@ -361,4 +379,54 @@ void ImportHelper::doImport() {
 
   emit imported(words);
   accept();
+}
+
+void ImportHelper::routeTags(const QString& rawTags, Word& w) const {
+  const QString defaultDialect = m_defaults->dialect.trimmed();
+  const QStringList wordforms = m_defaults->wordforms;
+
+  QStringList matchedWordforms;
+  QStringList remainingTags;
+
+  // Anki exports tags space-separated; also tolerate commas.
+  const QStringList tokens = rawTags.split(QRegularExpression("[,\\s]+"), Qt::SkipEmptyParts);
+  for (QString token : tokens) {
+    token = token.trimmed();
+    if (token.isEmpty()) continue;
+
+    if (!defaultDialect.isEmpty() &&
+        token.compare(defaultDialect, Qt::CaseInsensitive) == 0) {
+      w.dialect = defaultDialect.toStdString();
+      continue;
+    }
+
+    bool matchedDialect = false;
+    for (const QString& dialect : kDialectTags) {
+      if (token.compare(dialect, Qt::CaseInsensitive) == 0) {
+        w.dialect = dialect.toStdString();
+        matchedDialect = true;
+        break;
+      }
+    }
+    if (matchedDialect) continue;
+
+    bool matchedWordform = false;
+    for (const QString& wordform : wordforms) {
+      if (token.compare(wordform, Qt::CaseInsensitive) == 0) {
+        matchedWordforms << wordform;
+        matchedWordform = true;
+        break;
+      }
+    }
+    if (matchedWordform) continue;
+
+    remainingTags << token;
+  }
+
+  if (!matchedWordforms.isEmpty()) {
+    w.wordform = matchedWordforms.join(", ").toStdString();
+  }
+  if (!remainingTags.isEmpty()) {
+    w.tags = remainingTags.join(", ").toStdString();
+  }
 }

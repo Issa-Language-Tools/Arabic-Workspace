@@ -32,6 +32,7 @@ private:
   std::vector<QStringList> readRows(int maxRows) const;
   QChar currentDelimiter() const;
   void doImport();
+  void routeTags(const QString& rawTags, Word& w) const;
 
 private:
   QLineEdit* m_pathInput;

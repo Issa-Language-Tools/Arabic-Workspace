@@ -29,6 +29,7 @@ EditPopup::EditPopup(Word* word, const QStringList& wordforms, QWidget* parent) 
     }
   }
   m_inWordForm->setCheckedItems(selected);
+  m_inTags = addLabeledRow(stack, "Tags", QString::fromStdString(w->tags));
 
   QPushButton* saveButton = new QPushButton("Save");
   Theme::button(saveButton);
@@ -42,6 +43,7 @@ EditPopup::EditPopup(Word* word, const QStringList& wordforms, QWidget* parent) 
     w->source = m_inSource->toPlainText().toStdString();
     w->dialect = m_inDialect->toPlainText().toStdString();
     w->wordform = m_inWordForm->checkedItems().join(", ").toStdString();
+    w->tags = m_inTags->toPlainText().toStdString();
     accept();
   });
   connect(cancelButton, &QPushButton::clicked, this, &QDialog::reject);
