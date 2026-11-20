@@ -1,7 +1,10 @@
 #include "Theme.hpp"
 
+#include <QCheckBox>
 #include <QComboBox>
+#include <QFileDialog>
 #include <QLabel>
+#include <QLineEdit>
 #include <QListWidget>
 #include <QPlainTextEdit>
 #include <QPushButton>
@@ -19,6 +22,16 @@ void editor(QPlainTextEdit* e, QString placeholder) {
   e->setFixedHeight(55);
   e->setPlaceholderText(placeholder);
   e->setTabChangesFocus(true);
+}
+
+void lineEdit(QLineEdit* e, QString placeholder) {
+  e->setStyleSheet(
+    "background-color: rgb(50, 50, 50);"
+    "color: rgb(245, 245, 245);"
+    "font-size: 20px;"
+    "border: 1px solid rgb(200, 200, 200);");
+  e->setFixedHeight(55);
+  e->setPlaceholderText(placeholder);
 }
 
 void label(QLabel* l) {
@@ -39,11 +52,63 @@ void button(QPushButton* b) {
 
 void combo(QComboBox* c) {
   c->setStyleSheet(
-    "background-color: rgb(50, 50, 50);"
-    "color: rgb(245, 245, 245);"
-    "font-size: 20px;"
-    "border: 1px solid rgb(200, 200, 200);");
+    "QComboBox {"
+    "  background-color: rgb(50, 50, 50);"
+    "  color: rgb(245, 245, 245);"
+    "  font-size: 20px;"
+    "  border: 1px solid rgb(200, 200, 200);"
+    "}"
+    "QComboBox QAbstractItemView {"
+    "  background-color: rgb(50, 50, 50);"
+    "  color: rgb(245, 245, 245);"
+    "  selection-background-color: rgb(70, 70, 70);"
+    "  border: 1px solid rgb(200, 200, 200);"
+    "}");
   c->setFixedHeight(55);
+}
+
+void checkbox(QCheckBox* b) {
+  b->setStyleSheet(
+    "QCheckBox {"
+    "  color: rgb(245, 245, 245);"
+    "  font-size: 20px;"
+    "}");
+}
+
+void fileDialog(QFileDialog* d) {
+  d->setStyleSheet(
+    "QFileDialog { background-color: rgb(40, 40, 40); }"
+    "QLabel { color: rgb(245, 245, 245); font-size: 20px; }"
+    "QLineEdit {"
+    "  background-color: rgb(50, 50, 50);"
+    "  color: rgb(245, 245, 245);"
+    "  font-size: 20px;"
+    "  border: 1px solid rgb(200, 200, 200);"
+    "}"
+    "QPushButton {"
+    "  background-color: rgb(55, 55, 55);"
+    "  color: rgb(245, 245, 245);"
+    "  font-size: 20px;"
+    "  font-weight: bold;"
+    "}"
+    "QToolButton {"
+    "  background-color: rgb(55, 55, 55);"
+    "  color: rgb(245, 245, 245);"
+    "}"
+    "QListView, QTreeView, QTableView {"
+    "  background-color: rgb(50, 50, 50);"
+    "  color: rgb(245, 245, 245);"
+    "  font-size: 20px;"
+    "}"
+    "QHeaderView::section {"
+    "  background-color: rgb(55, 55, 55);"
+    "  color: rgb(245, 245, 245);"
+    "  border: none;"
+    "}"
+    "QComboBox {"
+    "  background-color: rgb(50, 50, 50);"
+    "  color: rgb(245, 245, 245);"
+    "}");
 }
 
 void comboButton(QPushButton* b) {
