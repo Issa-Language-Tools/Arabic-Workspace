@@ -5,7 +5,6 @@
 #include <QPushButton>
 #include <QTableWidget>
 #include <QTableWidgetItem>
-#include <iostream>
 
 #include "../../Theme/Theme.hpp"
 #include "../EditPopup/EditPopup.hpp"
@@ -36,38 +35,13 @@ WordList::WordList(const EntryDefaults* ed, QWidget* parent) : QWidget(parent), 
   stack->addWidget(m_table);
 }
 
-void WordList::addWord(const Word& w) {
-  m_words.push_back(w);
+void WordList::setWords(const std::vector<Word>& words) {
+  m_words = words;
 
   m_table->setRowCount((int)m_words.size());
-  refreshRow((int)m_words.size() - 1);
-}
-
-// TODO: remove
-void WordList::makeSampleData() {
-  // clang-format off
-  Word w1; w1.arabic = "مرحبا"; w1.english = "hello"; w1.source = "book";
-  Word w2; w2.arabic = "شكرا"; w2.english = "thank you"; w2.source = "convo";
-  Word w3; w3.arabic = "شكرا"; w3.english = "thank you"; w3.source = "convo";
-  Word w4; w4.arabic = "شكرا"; w4.english = "thank you"; w4.source = "convo";
-  Word w5; w5.arabic = "شكرا"; w5.english = "thank you"; w5.source = "convo";
-  Word w6; w6.arabic = "شكرا"; w6.english = "thank you"; w6.source = "convo";
-  Word w7; w7.arabic = "شكرا"; w7.english = "thank you"; w7.source = "convo";
-  Word w8; w8.arabic = "شكرا"; w8.english = "thank you"; w8.source = "convo";
-  Word w9; w9.arabic = "شكرا"; w9.english = "thank you"; w9.source = "convo";
-  Word w10; w10.arabic = "شكرا"; w10.english = "thank you"; w10.source = "convo";
-  // clang-format on
-
-  this->m_words.push_back(w1);
-  this->m_words.push_back(w2);
-  this->m_words.push_back(w3);
-  this->m_words.push_back(w4);
-  this->m_words.push_back(w5);
-  this->m_words.push_back(w6);
-  this->m_words.push_back(w7);
-  this->m_words.push_back(w8);
-  this->m_words.push_back(w9);
-  this->m_words.push_back(w10);
+  for (int r = 0; r < (int)m_words.size(); ++r) {
+    refreshRow(r);
+  }
 }
 
 void WordList::refreshRow(int r) {
@@ -80,31 +54,19 @@ void WordList::refreshRow(int r) {
   QPushButton* editButton = new QPushButton("Edit");
   Theme::button(editButton);
 
-  // Capture only the row index, then look up the Word when the button is
-  // clicked. Capturing a pointer into m_words would dangle once the vector
-  // reallocates (e.g. after an import adds more words).
+  // Capture only the row index, then look up the Word when the button is clicked.
   connect(editButton, &QPushButton::clicked, this, [this, r]() {
     Word* w = &m_words[r];
 
     EditPopup popup(w, m_defaults->wordforms);
 
     if (popup.exec() == QDialog::Accepted) {
-      std::cout << "edit: " << w->english << " : " << w->arabic << '\n';
       refreshRow(r);
+      emit wordEdited(*w);
     } else {
-      std::cout << "no edit: " << w->english << " : " << w->arabic << '\n';
     }
   });
 
   m_table->setCellWidget(r, 3, editButton);
-
   m_table->setRowHeight(r, kRowHeight);
-}
-
-void WordList::populate() {
-  m_table->setRowCount((int)m_words.size());
-
-  for (int r = 0; r < (int)m_words.size(); ++r) {
-    refreshRow(r);
-  }
 }

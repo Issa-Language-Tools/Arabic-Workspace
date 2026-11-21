@@ -6,6 +6,7 @@
 
 #include "../../Theme/Theme.hpp"
 #include "EntryDefaults.hpp"
+#include "NewEntryFilter.hpp"
 #include "Word.hpp"
 
 NewEntry::NewEntry(const EntryDefaults* ed, QWidget* parent) : QWidget(parent), m_defaults(ed) {
@@ -16,6 +17,14 @@ NewEntry::NewEntry(const EntryDefaults* ed, QWidget* parent) : QWidget(parent), 
   Theme::editor(m_arabic, "عربي");
   m_english = new QPlainTextEdit();
   Theme::editor(m_english, "English");
+
+  m_filter = new NewEntryFilter(m_arabic, m_english, this);
+  m_arabic->installEventFilter(m_filter);
+  m_english->installEventFilter(m_filter);
+
+  connect(m_filter, &NewEntryFilter::searchRequested, this, &NewEntry::searchRequested);
+  connect(m_filter, &NewEntryFilter::searchCleared, this, &NewEntry::searchCleared);
+  connect(m_filter, &NewEntryFilter::saveRequested, this, &NewEntry::save);
 
   QPushButton* saveButton = new QPushButton("Save");
   Theme::button(saveButton);

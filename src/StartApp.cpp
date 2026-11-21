@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
   QPushButton* importer = new QPushButton("Import");
   Theme::button(importer);
   QTabWidget* tabs = new QTabWidget();
-  Editor* editor = new Editor(&entryDefault);
+  Editor* editor = new Editor(&db, &entryDefault);
   Settings* settings = new Settings(&entryDefault);
   tabs->addTab(editor, "Editor");
   tabs->addTab(settings, "Settings");

@@ -12,12 +12,12 @@ class WordList : public QWidget {
   Q_OBJECT
 public:
   explicit WordList(const EntryDefaults* ed, QWidget* parent = nullptr);
-  void populate();
-public slots:
-  void addWord(const Word& w);
+  void setWords(const std::vector<Word>& words);
+
+signals:
+  void wordEdited(const Word& w);
 
 private:
-  void makeSampleData();  // TODO: remove
   void refreshRow(int r);
 
 private:
