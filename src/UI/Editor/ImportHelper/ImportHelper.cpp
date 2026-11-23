@@ -394,6 +394,12 @@ void ImportHelper::routeTags(const QString& rawTags, Word& w) const {
     token = token.trimmed();
     if (token.isEmpty()) continue;
 
+    // Anki-specific meta tags; not relevant to this app.
+    if (token.compare("hard", Qt::CaseInsensitive) == 0 ||
+        token.compare("leech", Qt::CaseInsensitive) == 0) {
+      continue;
+    }
+
     if (!defaultDialect.isEmpty() &&
         token.compare(defaultDialect, Qt::CaseInsensitive) == 0) {
       w.dialect = defaultDialect.toStdString();

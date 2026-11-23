@@ -25,7 +25,7 @@ std::string stripHarakaat(const std::string& in) {
       const unsigned char cha2 = in[i + 1];
       const bool haraka =
         (cha == 0xD9 && cha2 >= 0x8B && cha2 <= 0x9F) ||  // U+064B..U+065F
-        (cha == 0xD9 && cha2 == 0xB0);                  // U+0670
+        (cha == 0xD9 && cha2 == 0xB0);                    // U+0670
       if (!haraka) {
         out += (char)cha;
         out += (char)cha2;

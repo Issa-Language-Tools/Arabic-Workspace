@@ -34,6 +34,16 @@ void lineEdit(QLineEdit* e, QString placeholder) {
   e->setPlaceholderText(placeholder);
 }
 
+void searchBox(QLineEdit* e, QString placeholder) {
+  e->setStyleSheet(
+    "background-color: rgb(50, 50, 50);"
+    "color: rgb(245, 245, 245);"
+    "font-size: 16px;"
+    "border: 1px solid rgb(200, 200, 200);");
+  e->setFixedHeight(32);
+  e->setPlaceholderText(placeholder);
+}
+
 void label(QLabel* l) {
   l->setStyleSheet(
     "color: rgb(245, 245, 245);"

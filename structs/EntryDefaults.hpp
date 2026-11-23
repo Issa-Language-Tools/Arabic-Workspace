@@ -7,4 +7,5 @@ struct EntryDefaults {
   QString source;
   QString dialect;
   QStringList wordforms;
+  QStringList tags;
 };

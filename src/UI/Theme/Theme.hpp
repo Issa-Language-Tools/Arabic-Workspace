@@ -15,6 +15,7 @@ class QTabWidget;
 namespace Theme {
 void editor(QPlainTextEdit* e, QString placeholder = "");
 void lineEdit(QLineEdit* e, QString placeholder = "");
+void searchBox(QLineEdit* e, QString placeholder = "");
 void label(QLabel* l);
 void button(QPushButton* b);
 void combo(QComboBox* c);
