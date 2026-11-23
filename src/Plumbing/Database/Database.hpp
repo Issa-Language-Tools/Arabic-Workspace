@@ -12,7 +12,10 @@ public:
   ~Database();
 
   void addNewWord(const Word& word);
+  void updateWord(const Word& word);
   std::vector<Word> getAllWords(int limit = 0);
+  std::vector<Word> getUnexportedWords();
+  std::vector<Word> searchWords(const std::string& query, int limit = 100);
 
 private:
   sqlite3* db = nullptr;

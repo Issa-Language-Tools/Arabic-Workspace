@@ -23,6 +23,7 @@ add_executable(workspace
     src/UI/Editor/Editor.cpp
     src/UI/Editor/ImportHelper/ImportHelper.cpp
     src/UI/Editor/NewEntry/NewEntry.cpp
+    src/UI/Editor/NewEntry/NewEntryFilter.cpp
     src/UI/Editor/WordList/WordList.cpp
     src/UI/Editor/EditPopup/EditPopup.cpp
     src/UI/Editor/EditPopup/MultiSelectComboBox/MultiSelectComboBox.cpp
