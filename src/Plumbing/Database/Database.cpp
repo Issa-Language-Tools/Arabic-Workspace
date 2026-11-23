@@ -254,4 +254,3 @@ std::vector<Word> Database::searchWords(const std::string& query, int limit) {
   sqlite3_finalize(stmt);
   return result;
 }
-

@@ -22,7 +22,6 @@ EditPopup::EditPopup(Word* word, const QStringList& wordforms, const QStringList
   m_inSource = addLabeledRow(stack, "Source", QString::fromStdString(w->source));
   m_inDialect = addLabeledRow(stack, "Dialect", QString::fromStdString(w->dialect));
   m_inWordForm = addLabeledMultiSelect(stack, "Wordform", wordforms);
-
   QStringList selected;
   const QStringList existing = QString::fromStdString(w->wordform).split(',', Qt::SkipEmptyParts);
   for (QString part : existing) {

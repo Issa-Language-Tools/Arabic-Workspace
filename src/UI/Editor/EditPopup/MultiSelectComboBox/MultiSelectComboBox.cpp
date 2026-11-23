@@ -45,13 +45,7 @@ MultiSelectComboBox::MultiSelectComboBox(QWidget* parent) : QWidget(parent) {
   popupLayout->setSpacing(0);
 
   m_search = new QLineEdit();
-  m_search->setPlaceholderText("Search…");
-  m_search->setStyleSheet(
-    "background-color: rgb(50, 50, 50);"
-    "color: rgb(245, 245, 245);"
-    "font-size: 16px;"
-    "border: 1px solid rgb(200, 200, 200);");
-  m_search->setFixedHeight(32);
+  Theme::searchBox(m_search, "Search…");
   connect(m_search, &QLineEdit::textChanged, this, &MultiSelectComboBox::filterItems);
   popupLayout->addWidget(m_search);
 
