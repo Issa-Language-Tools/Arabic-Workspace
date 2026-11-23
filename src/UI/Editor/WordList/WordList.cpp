@@ -58,7 +58,7 @@ void WordList::refreshRow(int r) {
   connect(editButton, &QPushButton::clicked, this, [this, r]() {
     Word* w = &m_words[r];
 
-    EditPopup popup(w, m_defaults->wordforms);
+    EditPopup popup(w, m_defaults->wordforms, m_defaults->tags);
 
     if (popup.exec() == QDialog::Accepted) {
       refreshRow(r);

@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QEvent>
 #include <QKeyEvent>
+#include <QLineEdit>
 #include <QListWidget>
 #include <QListWidgetItem>
 #include <QMouseEvent>
@@ -36,12 +37,29 @@ MultiSelectComboBox::MultiSelectComboBox(QWidget* parent) : QWidget(parent) {
   connect(m_button, &QPushButton::clicked, this, &MultiSelectComboBox::togglePopup);
   layout->addWidget(m_button);
 
-  m_list = new CheckList(this);
-  m_list->setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint);
-  m_list->setAttribute(Qt::WA_ShowWithoutActivating);
+  m_popup = new QWidget(this);
+  m_popup->setWindowFlags(Qt::FramelessWindowHint | Qt::Tool | Qt::WindowStaysOnTopHint);
+
+  QVBoxLayout* popupLayout = new QVBoxLayout(m_popup);
+  popupLayout->setContentsMargins(0, 0, 0, 0);
+  popupLayout->setSpacing(0);
+
+  m_search = new QLineEdit();
+  m_search->setPlaceholderText("Search…");
+  m_search->setStyleSheet(
+    "background-color: rgb(50, 50, 50);"
+    "color: rgb(245, 245, 245);"
+    "font-size: 16px;"
+    "border: 1px solid rgb(200, 200, 200);");
+  m_search->setFixedHeight(32);
+  connect(m_search, &QLineEdit::textChanged, this, &MultiSelectComboBox::filterItems);
+  popupLayout->addWidget(m_search);
+
+  m_list = new CheckList(m_popup);
   m_list->setFocusPolicy(Qt::NoFocus);
   m_list->setSelectionMode(QAbstractItemView::NoSelection);
   Theme::checkList(m_list);
+  popupLayout->addWidget(m_list);
 
   connect(m_list, &QListWidget::itemChanged, this, [this](QListWidgetItem*) {
     updateButtonText();
@@ -60,8 +78,8 @@ MultiSelectComboBox::~MultiSelectComboBox() {
 bool MultiSelectComboBox::eventFilter(QObject* watched, QEvent* event) {
   if (event->type() == QEvent::KeyPress) {
     QKeyEvent* keyEvent = static_cast<QKeyEvent*>(event);
-    if (m_list->isVisible() && keyEvent->key() == Qt::Key_Escape) {
-      m_list->hide();
+    if (m_popup->isVisible() && keyEvent->key() == Qt::Key_Escape) {
+      m_popup->hide();
       // Consume the event so the parent dialog doesn't also close on Escape.
       return true;
     }
@@ -69,9 +87,9 @@ bool MultiSelectComboBox::eventFilter(QObject* watched, QEvent* event) {
 
   if (event->type() == QEvent::MouseButtonPress) {
     QWidget* widget = qobject_cast<QWidget*>(watched);
-    if (widget && m_list->isVisible() && widget != m_button &&
-        !m_list->isAncestorOf(widget) && !m_button->isAncestorOf(widget)) {
-      m_list->hide();
+    if (widget && m_popup->isVisible() && widget != m_button &&
+        !m_popup->isAncestorOf(widget) && !m_button->isAncestorOf(widget)) {
+      m_popup->hide();
     }
   }
 
@@ -102,6 +120,22 @@ void MultiSelectComboBox::setCheckedItems(const QStringList& items) {
   updateButtonText();
 }
 
+void MultiSelectComboBox::addCheckedItem(const QString& text) {
+  for (int i = 0; i < m_list->count(); ++i) {
+    QListWidgetItem* entry = m_list->item(i);
+    if (entry->text() == text) {
+      entry->setCheckState(Qt::Checked);
+      updateButtonText();
+      return;
+    }
+  }
+
+  QListWidgetItem* entry = new QListWidgetItem(text, m_list);
+  entry->setFlags(entry->flags() | Qt::ItemIsUserCheckable);
+  entry->setCheckState(Qt::Checked);
+  updateButtonText();
+}
+
 QStringList MultiSelectComboBox::checkedItems() const {
   QStringList result;
   for (int i = 0; i < m_list->count(); ++i) {
@@ -114,21 +148,34 @@ QStringList MultiSelectComboBox::checkedItems() const {
 }
 
 void MultiSelectComboBox::togglePopup() {
-  if (m_list->isVisible()) {
-    m_list->hide();
+  if (m_popup->isVisible()) {
+    m_popup->hide();
     return;
   }
+
+  // Reset the filter so the full list is shown each time it opens.
+  m_search->clear();
+  filterItems("");
 
   // Size the popup to fit its contents, but never narrower than the box and
   // never taller than a reasonable screen share.
   m_list->adjustSize();
-  m_list->setFixedWidth(qMax(m_button->width(), m_list->sizeHint().width()));
-  m_list->setFixedHeight(qMin(400, m_list->sizeHint().height()));
+  m_list->setFixedHeight(qMin(650, m_list->sizeHint().height()));
+  m_popup->setFixedWidth(qMax(m_button->width(), m_list->sizeHint().width()));
+  m_popup->adjustSize();
 
   // Drop it down directly below the button.
-  m_list->move(m_button->mapToGlobal(QPoint(0, m_button->height())));
-  m_list->show();
-  m_list->raise();
+  m_popup->move(m_button->mapToGlobal(QPoint(0, m_button->height())));
+  m_popup->show();
+  m_popup->raise();
+  m_search->setFocus();
+}
+
+void MultiSelectComboBox::filterItems(const QString& text) {
+  for (int i = 0; i < m_list->count(); ++i) {
+    QListWidgetItem* item = m_list->item(i);
+    item->setHidden(!item->text().contains(text, Qt::CaseInsensitive));
+  }
 }
 
 void MultiSelectComboBox::updateButtonText() {

@@ -2,13 +2,16 @@
 
 #include <qboxlayout.h>
 
+#include <QSettings>
 #include <QString>
+#include <QStringList>
 
 #include "../../Plumbing/Database/Database.hpp"
+#include "EntryDefaults.hpp"
 #include "NewEntry/NewEntry.hpp"
 #include "WordList/WordList.hpp"
 
-Editor::Editor(Database* db, const EntryDefaults* ed, QWidget* parent)
+Editor::Editor(Database* db, EntryDefaults* ed, QWidget* parent)
   : QWidget(parent), m_db(db), m_defaults(ed) {
   QVBoxLayout* stack = new QVBoxLayout(this);
 
@@ -31,6 +34,7 @@ Editor::Editor(Database* db, const EntryDefaults* ed, QWidget* parent)
 
   connect(m_wordList, &WordList::wordEdited, this, [this](const Word& w) {
     m_db->updateWord(w);
+    syncTagsFromWord(w);
   });
 
   stack->addWidget(m_wordList);
@@ -43,4 +47,24 @@ void Editor::addImportedWords(const std::vector<Word>& words) {
     m_db->addNewWord(w);
   }
   m_wordList->setWords(m_db->getUnexportedWords());
+}
+
+void Editor::syncTagsFromWord(const Word& w) {
+  bool changed = false;
+
+  const QStringList wordTags = QString::fromStdString(w.tags).split(',', Qt::SkipEmptyParts);
+  for (QString tag : wordTags) {
+    tag = tag.trimmed();
+    if (tag.isEmpty()) continue;
+
+    if (!m_defaults->tags.contains(tag, Qt::CaseInsensitive)) {
+      m_defaults->tags << tag;
+      changed = true;
+    }
+  }
+
+  if (changed) {
+    QSettings settings("config.ini", QSettings::IniFormat);
+    settings.setValue("defaults/tags", m_defaults->tags);
+  }
 }

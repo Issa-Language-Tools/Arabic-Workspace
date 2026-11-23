@@ -12,12 +12,15 @@ class WordList;
 
 class Editor : public QWidget {
 public:
-  explicit Editor(Database* db, const EntryDefaults* ed, QWidget* parent = nullptr);
+  explicit Editor(Database* db, EntryDefaults* ed, QWidget* parent = nullptr);
   void addImportedWords(const std::vector<Word>& words);
+
+private:
+  void syncTagsFromWord(const Word& w);
 
 private:
   Database* m_db;
   NewEntry* m_newEntry;
   WordList* m_wordList;
-  const EntryDefaults* m_defaults;
+  EntryDefaults* m_defaults;
 };

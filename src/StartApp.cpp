@@ -86,6 +86,7 @@ EntryDefaults loadDefaults() {
   defaults.source = settings.value("defaults/source", "").toString();
   defaults.dialect = settings.value("defaults/dialect", "").toString();
   defaults.wordforms = settings.value("defaults/wordforms", "").toStringList();
+  defaults.tags = settings.value("defaults/tags", "").toStringList();
 
   return defaults;
 }
