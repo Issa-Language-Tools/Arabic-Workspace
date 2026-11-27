@@ -7,6 +7,7 @@
 #include <QStringList>
 
 #include "../../Plumbing/Database/Database.hpp"
+#include "../GatewayClient/GatewayClient.hpp"
 #include "EntryDefaults.hpp"
 #include "NewEntry/NewEntry.hpp"
 #include "WordList/WordList.hpp"
@@ -14,6 +15,8 @@
 Editor::Editor(Database* db, EntryDefaults* ed, QWidget* parent)
   : QWidget(parent), m_db(db), m_defaults(ed) {
   QVBoxLayout* stack = new QVBoxLayout(this);
+
+  m_gatewayClient = new GatewayClient(this);
 
   m_wordList = new WordList(m_defaults);
   m_wordList->setWords(m_db->getUnexportedWords());
@@ -26,6 +29,7 @@ Editor::Editor(Database* db, EntryDefaults* ed, QWidget* parent)
 
   connect(m_newEntry, &NewEntry::searchRequested, this, [this](const QString& query) {
     m_wordList->setWords(m_db->searchWords(query.toStdString()));
+    m_gatewayClient->lookup(query.toStdString());
   });
 
   connect(m_newEntry, &NewEntry::searchCleared, this, [this]() {

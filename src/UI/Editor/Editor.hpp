@@ -5,6 +5,7 @@
 
 #include "Word.hpp"
 
+class GatewayClient;
 class Database;
 class EntryDefaults;
 class NewEntry;
@@ -23,4 +24,5 @@ private:
   NewEntry* m_newEntry;
   WordList* m_wordList;
   EntryDefaults* m_defaults;
+  GatewayClient* m_gatewayClient;
 };

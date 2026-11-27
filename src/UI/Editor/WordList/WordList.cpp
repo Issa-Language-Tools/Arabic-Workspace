@@ -21,7 +21,7 @@ WordList::WordList(const EntryDefaults* ed, QWidget* parent) : QWidget(parent), 
   m_table = new QTableWidget(0, 4, this);
   m_table->setEditTriggers(QAbstractItemView::NoEditTriggers);
   Theme::table(m_table);
-  m_table->setHorizontalHeaderLabels({"Arabic", "English", "Source", ""});
+  m_table->setHorizontalHeaderLabels({"Arabic", "English", "Tags", ""});
 
   m_table->horizontalHeader()->setSectionResizeMode(0, QHeaderView::Stretch);
   m_table->horizontalHeader()->setSectionResizeMode(1, QHeaderView::Stretch);
@@ -49,7 +49,7 @@ void WordList::refreshRow(int r) {
 
   m_table->setItem(r, 0, new QTableWidgetItem(QString::fromStdString(w.arabic)));
   m_table->setItem(r, 1, new QTableWidgetItem(QString::fromStdString(w.english)));
-  m_table->setItem(r, 2, new QTableWidgetItem(QString::fromStdString(w.source)));
+  m_table->setItem(r, 2, new QTableWidgetItem(QString::fromStdString(w.tags)));
 
   QPushButton* editButton = new QPushButton("Edit");
   Theme::button(editButton);
