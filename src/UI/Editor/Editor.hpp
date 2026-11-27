@@ -15,6 +15,7 @@ class Editor : public QWidget {
 public:
   explicit Editor(Database* db, EntryDefaults* ed, QWidget* parent = nullptr);
   void addImportedWords(const std::vector<Word>& words);
+  void refreshWords();
 
 private:
   void syncTagsFromWord(const Word& w);

@@ -22,6 +22,7 @@ add_executable(workspace
     src/UI/TitleBar/TitleBar.cpp
     src/UI/Editor/Editor.cpp
     src/UI/Editor/ImportExport/ImportExport.cpp
+    src/UI/Editor/ImportExport/ExportHelper/ExportHelper.cpp
     src/UI/Editor/ImportExport/ImportHelper/ImportHelper.cpp
     src/UI/Editor/NewEntry/NewEntry.cpp
     src/UI/Editor/NewEntry/NewEntryFilter.cpp

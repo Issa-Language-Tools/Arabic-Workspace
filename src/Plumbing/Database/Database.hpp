@@ -13,6 +13,7 @@ public:
 
   void addNewWord(const Word& word);
   void updateWord(const Word& word);
+  void setExported(int id, bool exported);
   std::vector<Word> getAllWords(int limit = 0);
   std::vector<Word> getUnexportedWords();
   std::vector<Word> searchWords(const std::string& query, int limit = 100);

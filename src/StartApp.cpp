@@ -13,6 +13,7 @@
 #include "./Plumbing/Database/Database.hpp"
 #include "UI/Editor/EditPopup/MultiSelectComboBox/MultiSelectComboBox.hpp"
 #include "UI/Editor/Editor.hpp"
+#include "UI/Editor/ImportExport/ExportHelper/ExportHelper.hpp"
 #include "UI/Editor/ImportExport/ImportExport.hpp"
 #include "UI/Editor/ImportExport/ImportHelper/ImportHelper.hpp"
 #include "UI/Settings/Settings.hpp"
@@ -56,6 +57,12 @@ int main(int argc, char* argv[]) {
     ImportHelper popup(&entryDefault, &window);
     QObject::connect(&popup, &ImportHelper::imported, editor,
                      [editor](const std::vector<Word>& words) { editor->addImportedWords(words); });
+    popup.exec();
+  });
+  QObject::connect(buttons, &ImportExport::exportClicked, &window, [&window, editor, &db]() {
+    ExportHelper popup(&db, &window);
+    QObject::connect(&popup, &ExportHelper::exported, editor,
+                     [editor](int count) { editor->refreshWords(); });
     popup.exec();
   });
   Theme::tabs(tabs);
