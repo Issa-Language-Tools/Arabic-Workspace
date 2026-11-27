@@ -17,7 +17,7 @@
 #include <array>
 #include <fstream>
 
-#include "../../Theme/Theme.hpp"
+#include "../../../Theme/Theme.hpp"
 #include "EntryDefaults.hpp"
 
 namespace {

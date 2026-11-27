@@ -13,7 +13,8 @@
 #include "./Plumbing/Database/Database.hpp"
 #include "UI/Editor/EditPopup/MultiSelectComboBox/MultiSelectComboBox.hpp"
 #include "UI/Editor/Editor.hpp"
-#include "UI/Editor/ImportHelper/ImportHelper.hpp"
+#include "UI/Editor/ImportExport/ImportExport.hpp"
+#include "UI/Editor/ImportExport/ImportHelper/ImportHelper.hpp"
 #include "UI/Settings/Settings.hpp"
 #include "UI/Theme/Theme.hpp"
 #include "UI/TitleBar/TitleBar.hpp"
@@ -44,15 +45,14 @@ int main(int argc, char* argv[]) {
   QVBoxLayout* rightPanelLayout = new QVBoxLayout(rightPanel);
 
   rightPanelLayout->addWidget(new TitleBar("Language Workspace"));
-  QPushButton* importer = new QPushButton("Import");
-  Theme::button(importer);
   QTabWidget* tabs = new QTabWidget();
   Editor* editor = new Editor(&db, &entryDefault);
   Settings* settings = new Settings(&entryDefault);
+  ImportExport* buttons = new ImportExport();
   tabs->addTab(editor, "Editor");
   tabs->addTab(settings, "Settings");
-  tabs->setCornerWidget(importer, Qt::TopRightCorner);
-  QObject::connect(importer, &QPushButton::clicked, &window, [&window, editor, &entryDefault]() {
+  tabs->setCornerWidget(buttons, Qt::TopRightCorner);
+  QObject::connect(buttons, &ImportExport::importClicked, &window, [&window, editor, &entryDefault]() {
     ImportHelper popup(&entryDefault, &window);
     QObject::connect(&popup, &ImportHelper::imported, editor,
                      [editor](const std::vector<Word>& words) { editor->addImportedWords(words); });
