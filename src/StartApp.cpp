@@ -10,6 +10,7 @@
 #include <QWidget>
 
 #include "../structs/EntryDefaults.hpp"
+#include "./Plumbing/AppPaths.hpp"
 #include "./Plumbing/Database/Database.hpp"
 #include "UI/Editor/EditPopup/MultiSelectComboBox/MultiSelectComboBox.hpp"
 #include "UI/Editor/Editor.hpp"
@@ -24,6 +25,8 @@ EntryDefaults loadDefaults();
 
 int main(int argc, char* argv[]) {
   QApplication app(argc, argv);
+  QCoreApplication::setOrganizationName("Issa-Language-Tools");
+  QCoreApplication::setApplicationName("Language-Workspace");
   app.setFont(QFont("Noto Sans", 14));
 
   // Run Migrations:
@@ -87,7 +90,7 @@ int main(int argc, char* argv[]) {
 }
 
 EntryDefaults loadDefaults() {
-  QSettings settings("config.ini", QSettings::IniFormat);
+  QSettings settings(AppPaths::appDataDir() + "/config.ini", QSettings::IniFormat);
 
   EntryDefaults defaults;
   defaults.source = settings.value("defaults/source", "").toString();

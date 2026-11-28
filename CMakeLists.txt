@@ -17,6 +17,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/release")
 
 add_executable(workspace
     src/StartApp.cpp
+    src/Plumbing/AppPaths.cpp
     src/Plumbing/Database/Database.cpp
     src/Plumbing/Database/Helper.cpp
     src/UI/TitleBar/TitleBar.cpp
