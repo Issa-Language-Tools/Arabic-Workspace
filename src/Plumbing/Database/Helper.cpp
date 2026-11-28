@@ -2,6 +2,8 @@
 
 #include <sqlite3.h>
 
+#include "../AppPaths.hpp"
+
 #include <algorithm>
 #include <cstddef>
 #include <cstdio>
@@ -22,7 +24,8 @@ Status check_versions_db(sqlite3** versions) {
 
 Status initialize_versions_db(sqlite3** out) {
   sqlite3* versions = nullptr;
-  if (sqlite3_open("versions.db", &versions) != SQLITE_OK) {
+  const std::string path = (AppPaths::appDataDir() + "/versions.db").toStdString();
+  if (sqlite3_open(path.c_str(), &versions) != SQLITE_OK) {
     fprintf(stderr, "Can't open db: %s\r\n", sqlite3_errmsg(versions));
     sqlite3_close_v2(versions);
     versions = nullptr;

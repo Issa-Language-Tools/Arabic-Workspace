@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <sstream>
 
+#include "../AppPaths.hpp"
 #include "Helper.hpp"
 #include "Status.hpp"
 
@@ -59,7 +60,8 @@ void noHarakaatFunc(sqlite3_context* ctx, int argc, sqlite3_value** argv) {
 }  // namespace
 
 Database::Database() {
-  if (sqlite3_open("words.db", &db) != SQLITE_OK) {
+  const std::string path = (AppPaths::appDataDir() + "/words.db").toStdString();
+  if (sqlite3_open(path.c_str(), &db) != SQLITE_OK) {
     fprintf(stderr, "Can't open db: %s\n", sqlite3_errmsg(db));
     sqlite3_close_v2(db);
     db = nullptr;

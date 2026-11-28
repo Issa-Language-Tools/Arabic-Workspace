@@ -5,6 +5,7 @@
 #include <QShowEvent>
 #include <QVBoxLayout>
 
+#include "../../Plumbing/AppPaths.hpp"
 #include "../FormHelpers.hpp"
 #include "../Theme/Theme.hpp"
 #include "EntryDefaults.hpp"
@@ -54,7 +55,7 @@ void Settings::save() {
   m_defaults->wordforms = splitList(m_inWordform->toPlainText());
   m_defaults->tags = splitList(m_inTags->toPlainText());
 
-  QSettings settings("config.ini", QSettings::IniFormat);
+  QSettings settings(AppPaths::appDataDir() + "/config.ini", QSettings::IniFormat);
   settings.setValue("defaults/source", m_defaults->source);
   settings.setValue("defaults/dialect", m_defaults->dialect);
   settings.setValue("defaults/wordforms", m_defaults->wordforms);
