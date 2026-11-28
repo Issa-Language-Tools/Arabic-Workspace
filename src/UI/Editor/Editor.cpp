@@ -53,6 +53,10 @@ void Editor::addImportedWords(const std::vector<Word>& words) {
   m_wordList->setWords(m_db->getUnexportedWords());
 }
 
+void Editor::refreshWords() {
+  m_wordList->setWords(m_db->getUnexportedWords());
+}
+
 void Editor::syncTagsFromWord(const Word& w) {
   bool changed = false;
 

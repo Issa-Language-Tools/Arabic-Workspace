@@ -216,6 +216,27 @@ void Database::updateWord(const Word& word) {
   sqlite3_finalize(stmt);
 }
 
+void Database::setExported(int id, bool exported) {
+  if (!db || id == 0) return;
+
+  const char* sql = "UPDATE words SET exported = ? WHERE id = ?;";
+
+  sqlite3_stmt* stmt = nullptr;
+  if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK) {
+    fprintf(stderr, "prepare failed: %s\n", sqlite3_errmsg(db));
+    return;
+  }
+
+  sqlite3_bind_int(stmt, 1, exported ? 1 : 0);
+  sqlite3_bind_int(stmt, 2, id);
+
+  if (sqlite3_step(stmt) != SQLITE_DONE) {
+    fprintf(stderr, "setExported failed: %s\n", sqlite3_errmsg(db));
+  }
+
+  sqlite3_finalize(stmt);
+}
+
 std::vector<Word> Database::searchWords(const std::string& query, int limit) {
   std::vector<Word> result;
   if (!db || query.empty()) return result;
