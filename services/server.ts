@@ -25,8 +25,6 @@ app.post("/lookup", async (req, res) => {
 
     const results = [await searchWiktionary(word), await searchLughatana(word)];
 
-    console.log(JSON.stringify(results, null, 2));
-
     res.status(200).json(results);
   } catch (error: any) {
     console.log("Server error in /lookup:", error.message);

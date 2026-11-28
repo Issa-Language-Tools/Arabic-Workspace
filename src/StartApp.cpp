@@ -12,11 +12,13 @@
 #include "../structs/EntryDefaults.hpp"
 #include "./Plumbing/AppPaths.hpp"
 #include "./Plumbing/Database/Database.hpp"
+#include "UI/Dictionary/DictionaryPanel.hpp"
 #include "UI/Editor/EditPopup/MultiSelectComboBox/MultiSelectComboBox.hpp"
 #include "UI/Editor/Editor.hpp"
 #include "UI/Editor/ImportExport/ExportHelper/ExportHelper.hpp"
 #include "UI/Editor/ImportExport/ImportExport.hpp"
 #include "UI/Editor/ImportExport/ImportHelper/ImportHelper.hpp"
+#include "UI/GatewayClient/GatewayClient.hpp"
 #include "UI/Settings/Settings.hpp"
 #include "UI/Theme/Theme.hpp"
 #include "UI/TitleBar/TitleBar.hpp"
@@ -43,6 +45,11 @@ int main(int argc, char* argv[]) {
   leftPanel->setStyleSheet("background-color: rgb(48, 48, 48);");
   leftPanel->setMinimumWidth(200);
   leftPanel->setMaximumWidth(500);
+  QVBoxLayout* leftLayout = new QVBoxLayout(leftPanel);
+  leftLayout->setContentsMargins(0, 0, 0, 0);
+
+  DictionaryPanel* dictionaryPanel = new DictionaryPanel();
+  leftLayout->addWidget(dictionaryPanel);
 
   QWidget* rightPanel = new QWidget();
   rightPanel->setStyleSheet("background-color: rgb(55, 55, 55);");
@@ -50,7 +57,10 @@ int main(int argc, char* argv[]) {
 
   rightPanelLayout->addWidget(new TitleBar("Language Workspace"));
   QTabWidget* tabs = new QTabWidget();
-  Editor* editor = new Editor(&db, &entryDefault);
+  GatewayClient* gateway = new GatewayClient(&window);
+  Editor* editor = new Editor(&db, &entryDefault, gateway);
+  QObject::connect(gateway, &GatewayClient::resultsReady,
+                   dictionaryPanel, &DictionaryPanel::setResults);
   Settings* settings = new Settings(&entryDefault);
   ImportExport* buttons = new ImportExport();
   tabs->addTab(editor, "Editor");

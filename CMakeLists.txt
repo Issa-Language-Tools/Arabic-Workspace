@@ -32,6 +32,7 @@ add_executable(workspace
     src/UI/Editor/EditPopup/MultiSelectComboBox/MultiSelectComboBox.cpp
     src/UI/Settings/Settings.cpp
     src/UI/Theme/Theme.cpp
+    src/UI/Dictionary/DictionaryPanel.cpp
     src/UI/GatewayClient/GatewayClient.cpp
 )
 

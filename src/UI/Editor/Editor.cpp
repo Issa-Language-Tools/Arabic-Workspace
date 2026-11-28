@@ -12,11 +12,9 @@
 #include "NewEntry/NewEntry.hpp"
 #include "WordList/WordList.hpp"
 
-Editor::Editor(Database* db, EntryDefaults* ed, QWidget* parent)
-  : QWidget(parent), m_db(db), m_defaults(ed) {
+Editor::Editor(Database* db, EntryDefaults* ed, GatewayClient* gateway, QWidget* parent)
+  : QWidget(parent), m_db(db), m_defaults(ed), m_gatewayClient(gateway) {
   QVBoxLayout* stack = new QVBoxLayout(this);
-
-  m_gatewayClient = new GatewayClient(this);
 
   m_wordList = new WordList(m_defaults);
   m_wordList->setWords(m_db->getUnexportedWords());
