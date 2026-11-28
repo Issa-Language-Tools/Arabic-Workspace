@@ -13,7 +13,7 @@ class WordList;
 
 class Editor : public QWidget {
 public:
-  explicit Editor(Database* db, EntryDefaults* ed, QWidget* parent = nullptr);
+  explicit Editor(Database* db, EntryDefaults* ed, GatewayClient* gateway, QWidget* parent = nullptr);
   void addImportedWords(const std::vector<Word>& words);
   void refreshWords();
 

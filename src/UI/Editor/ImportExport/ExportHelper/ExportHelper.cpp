@@ -74,11 +74,10 @@ ExportHelper::ExportHelper(Database* db, QWidget* parent) : QDialog(parent), m_d
   stack->addWidget(title);
 
   QScrollArea* scroll = new QScrollArea();
-  scroll->setWidgetResizable(true);
-  scroll->setStyleSheet("QScrollArea { border: none; background: transparent; }");
+  Theme::scrollArea(scroll);
 
   QWidget* container = new QWidget();
-  container->setStyleSheet("background: transparent;");
+  Theme::transparent(container);
 
   m_columnsLayout = new QVBoxLayout(container);
   m_columnsLayout->setContentsMargins(0, 0, 0, 0);

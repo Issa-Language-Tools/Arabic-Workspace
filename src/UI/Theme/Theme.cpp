@@ -3,13 +3,16 @@
 #include <QCheckBox>
 #include <QComboBox>
 #include <QFileDialog>
+#include <QFrame>
 #include <QLabel>
 #include <QLineEdit>
 #include <QListWidget>
 #include <QPlainTextEdit>
 #include <QPushButton>
+#include <QScrollArea>
 #include <QTabWidget>
 #include <QTableWidget>
+#include <QWidget>
 
 namespace Theme {
 
@@ -49,6 +52,35 @@ void label(QLabel* l) {
     "color: rgb(245, 245, 245);"
     "font-weight: bold;"
     "font-size: 20px;");
+}
+
+void cardFrame(QFrame* f) {
+  f->setStyleSheet(
+    "QFrame { background-color: rgb(50, 50, 50); border-radius: 6px; }");
+}
+
+void cardWord(QLabel* l) {
+  l->setStyleSheet(
+    "color: rgb(245, 245, 245);"
+    "font-size: 16px;"
+    "font-weight: bold;");
+}
+
+void cardMeaning(QLabel* l) {
+  l->setStyleSheet("color: rgb(220, 220, 220); font-size: 13px;");
+}
+
+void cardSource(QLabel* l) {
+  l->setStyleSheet("color: rgb(150, 150, 150); font-size: 11px;");
+}
+
+void scrollArea(QScrollArea* area) {
+  area->setWidgetResizable(true);
+  area->setStyleSheet("QScrollArea { border: none; background: transparent; }");
+}
+
+void transparent(QWidget* w) {
+  w->setStyleSheet("background: transparent;");
 }
 
 void button(QPushButton* b) {
